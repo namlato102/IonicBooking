@@ -13,6 +13,7 @@ import { PlacesService } from 'src/app/services/places.service';
 export class PlaceDetailPage implements OnInit {
 
   place !: Place;
+  showDescription = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -41,6 +42,7 @@ export class PlaceDetailPage implements OnInit {
   onBookPlace(){
     //this.router.navigateByUrl("/places/tabs/discover");
     //this.navCtrl.navigateBack("/places/tabs/discover");
+    this.showDescription = true;
     this.actionsheetCtrl.create({
       header: 'Choose an Action', 
       buttons: [
@@ -71,7 +73,7 @@ export class PlaceDetailPage implements OnInit {
     this.modalCtrl
       .create({
         component: CreateBookingComponent, 
-        componentProps: {selectedPlace: this.place}
+        componentProps: {selectedPlace: this.place, selectedMode: mode} //added selectedMode
       })
       .then(modalEl => {
         modalEl.present();

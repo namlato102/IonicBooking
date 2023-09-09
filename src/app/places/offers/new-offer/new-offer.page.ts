@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-new-offer',
@@ -10,7 +12,10 @@ export class NewOfferPage implements OnInit {
 
   form !: FormGroup;
 
-  constructor() { }
+  constructor(
+    private navCtrl : NavController,
+    private router : Router
+  ) { }
 
   ngOnInit() {
     //using reactive form module
@@ -39,6 +44,11 @@ export class NewOfferPage implements OnInit {
   }
 
   onCreateOffer(){
+    if(!this.form.valid){
+      return;
+    }
+    //this.router.navigate(['/', 'places', 'tabs', 'offers']);
+    this.navCtrl.navigateBack("/places/tabs/offers");
     console.log(this.form);
   }
 
