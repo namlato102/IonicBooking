@@ -17,6 +17,7 @@ import { CreateBookingComponent } from 'src/app/bookings/create-booking/create-b
     PlaceDetailPageRoutingModule
   ],
   declarations: [PlaceDetailPage, CreateBookingComponent],
+  //added createBookingcomponent
   //entryComponents: [createBookingComponent] no need
 })
 export class PlaceDetailPageModule {}
