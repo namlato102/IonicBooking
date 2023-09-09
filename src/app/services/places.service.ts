@@ -38,5 +38,9 @@ export class PlacesService {
 
   constructor() { }
 
-  
+  getPlace(id : string){
+    return {...this._places.find(p => p.id === id)};
+    // clone that entire _place object using spread operator then i pull out all the properties of Place model, which i retrieved here
+    //and add them into a object.
+  }
 }

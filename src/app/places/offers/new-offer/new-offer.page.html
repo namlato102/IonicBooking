@@ -1,11 +1,14 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="caret-back" defaultHref="/places/tabs/offers"></ion-back-button><!--incase the web app reloaded itself-->
+    </ion-buttons>
     <ion-title>New Offer</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-content>
+  <ion-header>
     <ion-toolbar>
       <ion-title size="large">new-offer</ion-title>
     </ion-toolbar>
