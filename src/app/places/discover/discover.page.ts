@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { InfiniteScrollCustomEvent, MenuController, SegmentChangeEventDetail } from '@ionic/angular';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
 
@@ -25,5 +25,18 @@ export class DiscoverPage implements OnInit {
     this.menuCtrl.toggle();
   }
   */
+
+  onIonInfinite(ev : any){
+    this.loadedPlaces;
+    setTimeout(() => {
+      (ev as InfiniteScrollCustomEvent).target.complete();
+    }, 500);
+  }
+
+  //observe event change
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail> | any) {
+    console.log(event.detail);
+  }
+  
 
 }

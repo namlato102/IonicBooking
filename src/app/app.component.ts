@@ -15,6 +15,6 @@ export class AppComponent {
 
   onLogout(){
     this.authService.logout();
-    this.router.navigateByUrl('/auth')
+    this.router.navigateByUrl('/auth');//redirecting to auth page
   }
 }
