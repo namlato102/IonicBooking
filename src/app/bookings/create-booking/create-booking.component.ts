@@ -11,7 +11,7 @@ import { Place } from 'src/app/models/place.model';
 export class CreateBookingComponent  implements OnInit {
   @Input() selectedPlace !: Place;
   @Input() selectedMode !: 'select' | 'random';
-  @ViewChild('f', { static: true }) form !: NgForm;
+  @ViewChild('f', { static: true }) form !: NgForm; //angular feature
   startDate !: string;
   endDate !: string;
   
@@ -47,10 +47,12 @@ export class CreateBookingComponent  implements OnInit {
   }
 
   onBookPlace(){
+    //check valid
     if (!this.form.valid || !this.datesValid) {
       return;
     }
 
+    //make page disappeared
     this.modalCtrl.dismiss(
       {
         bookingData: {
@@ -66,8 +68,8 @@ export class CreateBookingComponent  implements OnInit {
   }
 
   datesValid() {
-    const startDate = new Date(this.form.value['date-from']);
-    const endDate = new Date(this.form.value['date-to']);
+    const startDate = new Date(this.form.value['date-from']);//choose from html page
+    const endDate = new Date(this.form.value['date-to']);//choose from html page
     return endDate > startDate;
   }
 

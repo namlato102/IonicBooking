@@ -76,13 +76,14 @@ export class PlaceDetailPage implements OnInit {
         componentProps: {selectedPlace: this.place, selectedMode: mode} //added selectedMode
       })
       .then(modalEl => {
-        modalEl.present();
-        return modalEl.onDidDismiss();
+        console.log(modalEl.role);
+        modalEl.present(); //Present the modal overlay after it has been created.
+        return modalEl.onDidDismiss();//Returns a promise that resolves when the modal did dismiss.
       })
-      .then(resultData => {
-        console.log(resultData.data, resultData.role);
+      .then(resultData => {//this is for the above promise
+        console.log(resultData.data, resultData.role);//return bookingData from onBookPlace() from create-booking.component
         if(resultData.role === 'confirm')
-        console.log('BOOKED!');
+        console.log('BOOKED!');//appeared when create-booking finished
       });
   }
 }
