@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms'; //added
 
 import { IonicModule } from '@ionic/angular';
 
@@ -12,6 +12,7 @@ import { NewOfferPage } from './new-offer.page';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule, //newly added
     IonicModule,
     NewOfferPageRoutingModule
   ],
