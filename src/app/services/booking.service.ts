@@ -14,6 +14,10 @@ export class BookingService {
     return this._bookings.asObservable();
   }
 
+  constructor(
+    private authService : AuthService,
+  ) { }
+
   addBooking(
     placeId : string, 
     placeTitle : string,
@@ -37,17 +41,18 @@ export class BookingService {
       dateTo
     );
 
-    return this._bookings.pipe(take(1), delay(1000), tap(places => {
-      this._bookings.next(places.concat(newBooking));
+    return this._bookings.pipe(take(1), delay(1000), tap(bookings => {
+      this._bookings.next(bookings.concat(newBooking));
       })
     )
   }
 
   cancelBooking(bookingId : string){
-
+    return this._bookings.pipe(take(1), delay(1000), tap(bookings => {
+      this._bookings.next(bookings.filter(b => b.id !== bookingId));
+      })
+    );
   }
 
-  constructor(
-    private authService : AuthService,
-  ) { }
+  
 }
