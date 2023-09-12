@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
 
@@ -12,6 +13,8 @@ import { PlacesService } from 'src/app/services/places.service';
 export class OfferBookingsPage implements OnInit {
 
   place !: Place;
+  placeSub !: Subscription;
+ 
 
   //activeedRouted allow to subscribe to changes to route params in the url,
   //which id where i store the dynamic segment
@@ -33,11 +36,19 @@ export class OfferBookingsPage implements OnInit {
       }
 
       
-      const placeid = paramMap.get('placeId');
-      if (placeid !== null){
-        this.place = this.placesService.getPlace(placeid);
-      }  
+      const placeId = paramMap.get('placeId');
+      if (placeId != null) {
+        this.placeSub = this.placesService.getPlace(placeId).subscribe(place => {
+          this.place = place
+        });
+      } 
     });
+  }
+
+  ngOnDestroy() {
+    if(this.placeSub){
+      this.placeSub.unsubscribe();
+    }      
   }
 
 }

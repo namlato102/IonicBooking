@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-place-detail',
   templateUrl: './place-detail.page.html',
   styleUrls: ['./place-detail.page.scss'],
 })
-export class PlaceDetailPage implements OnInit {
+export class PlaceDetailPage implements OnInit, OnDestroy {
 
   place !: Place;
-  showDescription = false;
+  //showDescription = false;
+  private placeSub !: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,7 +24,7 @@ export class PlaceDetailPage implements OnInit {
     private modalCtrl : ModalController,
     private actionsheetCtrl : ActionSheetController
   ) { }
-
+  
   ngOnInit() {
     //with acivatedRouted automatically update, because subscribtion listen to changes in the urls will always be live
     this.activatedRoute.paramMap.subscribe(paramMap => {
@@ -32,17 +34,19 @@ export class PlaceDetailPage implements OnInit {
         return;
       }
 
-      const placeid = paramMap.get('placeId');
-      if (placeid !== null){
-        this.place = this.placesService.getPlace(placeid);
-      }  
+      const placeId = paramMap.get('placeId');
+      if (placeId != null) {
+        this.placeSub = this.placesService.getPlace(placeId).subscribe(place => {
+          this.place = place
+        });
+      }
     });
   }
 
   onBookPlace(){
     //this.router.navigateByUrl("/places/tabs/discover");
     //this.navCtrl.navigateBack("/places/tabs/discover");
-    this.showDescription = true;
+    //this.showDescription = true;
     this.actionsheetCtrl.create({
       header: 'Choose an Action', 
       buttons: [
@@ -78,7 +82,7 @@ export class PlaceDetailPage implements OnInit {
       .then(modalEl => {
         console.log(modalEl.role);
         modalEl.present(); //Present the modal overlay after it has been created.
-        return modalEl.onDidDismiss();//Returns a promise that resolves when the modal did dismiss.
+        return modalEl.onDidDismiss();//Returns a promise that resolves when the modal did dismiss. like what did i do after i dismiss
       })
       .then(resultData => {//this is for the above promise
         console.log(resultData.data, resultData.role);//return bookingData from onBookPlace() from create-booking.component
@@ -86,4 +90,11 @@ export class PlaceDetailPage implements OnInit {
         console.log('BOOKED!');//appeared when create-booking finished
       });
   }
+
+  ngOnDestroy() {
+     if(this.placeSub){
+      this.placeSub.unsubscribe();
+     }
+  }
+
 }

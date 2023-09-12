@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
+
+import { PlacesService } from 'src/app/services/places.service';
 
 @Component({
   selector: 'app-new-offer',
@@ -14,7 +16,9 @@ export class NewOfferPage implements OnInit {
 
   constructor(
     private navCtrl : NavController,
-    private router : Router
+    private router : Router,
+    private placesService : PlacesService,
+    private loadingCtrl : LoadingController
   ) { }
 
   ngOnInit() {
@@ -48,8 +52,29 @@ export class NewOfferPage implements OnInit {
       return;
     }
     //this.router.navigate(['/', 'places', 'tabs', 'offers']);
-    this.navCtrl.navigateBack("/places/tabs/offers");
+    //add place to discover page
     console.log(this.form);
-  }
 
+    this.loadingCtrl.create({
+      message: 'Creating place...'
+    }).then(loadingEl => {
+      loadingEl.present();//present loading element when we start sending the data
+      this.placesService.addPlace(
+        this.form.value.title,
+        this.form.value.description,
+        +this.form.value.price,
+        new Date(this.form.value.dateFrom),
+        new Date(this.form.value.dateTo)
+      ).subscribe(() => {
+        loadingEl.dismiss();//and we clear it here once we done with it
+        this.form.reset();//to reset input 
+        this.router.navigate(['/places/tabs/offers']);
+      });
+    })
+  } 
 }
+  
+
+     
+
+

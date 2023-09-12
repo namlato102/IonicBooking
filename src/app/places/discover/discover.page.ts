@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { InfiniteScrollCustomEvent, MenuController, SegmentChangeEventDetail } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
 
@@ -8,16 +9,21 @@ import { PlacesService } from 'src/app/services/places.service';
   templateUrl: './discover.page.html',
   styleUrls: ['./discover.page.scss'],
 })
-export class DiscoverPage implements OnInit {
+export class DiscoverPage implements OnInit, OnDestroy {
 
   loadedPlaces !: Place[];
+  listedLoadedPlaces !: Place[];
+  private placesSub !: Subscription;
 
   constructor(
     private placesService : PlacesService,
     private menuCtrl : MenuController) { }
 
   ngOnInit() {
-    this.loadedPlaces = this.placesService.places;
+    this.placesSub = this.placesService.places.subscribe(places => {
+      this.loadedPlaces = places;
+      this.listedLoadedPlaces = this.loadedPlaces.slice(1);   
+    });
   }
 
   /*
@@ -38,5 +44,9 @@ export class DiscoverPage implements OnInit {
     console.log(event.detail);
   }
   
-
+  ngOnDestroy(){
+    if (this.placesSub) {
+      this.placesSub.unsubscribe();
+    }
+  }
 }
