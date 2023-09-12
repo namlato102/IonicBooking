@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController, NavController } from '@ionic/angular';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
 import { Subscription } from 'rxjs';
+import { BookingService } from 'src/app/services/booking.service';
 
 @Component({
   selector: 'app-place-detail',
@@ -22,7 +23,9 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private navCtrl : NavController,
     private placesService : PlacesService,
     private modalCtrl : ModalController,
-    private actionsheetCtrl : ActionSheetController
+    private actionsheetCtrl : ActionSheetController,
+    private bookingService : BookingService,
+    private loadingCtrl : LoadingController
   ) { }
   
   ngOnInit() {
@@ -84,10 +87,29 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         modalEl.present(); //Present the modal overlay after it has been created.
         return modalEl.onDidDismiss();//Returns a promise that resolves when the modal did dismiss. like what did i do after i dismiss
       })
-      .then(resultData => {//this is for the above promise
-        console.log(resultData.data, resultData.role);//return bookingData from onBookPlace() from create-booking.component
-        if(resultData.role === 'confirm')
-        console.log('BOOKED!');//appeared when create-booking finished
+      .then(resultData => {//this is for the above promise , return bookingData from onBookPlace() from create-booking.component
+        if(resultData.role === 'confirm'){
+          this.loadingCtrl
+            .create({message: 'Booking Place...'})
+            .then(loadingEl => {
+              loadingEl.present(); //like the new offer
+              const data = resultData.data.bookingData;
+              console.log('BOOKED!');//appeared when create-booking finished
+              this.bookingService.addBooking(
+                this.place.id,
+                this.place.title,
+                this.place.imageUrl,
+                data.firstName,
+                data.lastName,
+                data.guestNumber,
+                data.startDate,
+                data.endDate
+              ).subscribe(() => {
+                loadingEl.dismiss();
+                
+              })
+            })
+        }
       });
   }
 
