@@ -99,6 +99,7 @@ export class PlacesService {
             }
           }
           return places;
+          //return []; //to see case no offer
         }),
         tap(places => {
           this._places.next(places);//update places list place behavior subject by emit new event
