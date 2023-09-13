@@ -15,6 +15,8 @@ export class EditOfferPage implements OnInit, OnDestroy {
   place !: Place; 
   form !: FormGroup;
   placeSub !: Subscription;
+  isLoading = false;
+  placeId : string | any;
 
   constructor(
     private activatedRoute : ActivatedRoute,
@@ -45,6 +47,14 @@ export class EditOfferPage implements OnInit, OnDestroy {
         return;
       }
 
+      //set this placeId when we got an id
+      /*
+      when we start loading the place for that id, we can already store the placeId  
+      */
+      this.placeId = paramMap.get('placeId');
+
+      
+      this.isLoading = true;
       //If the "placeId" parameter does exist in the route, 
       //it retrieves its value using paramMap.get('placeId') and assigns it to the placeId variable.
       //this.place = this.placesService.getPlace(paramMap.get('placeId'));
@@ -64,6 +74,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
               validators: [Validators.required, Validators.maxLength(180)]
             })
           });
+          this.isLoading = false;
         });
       }  
     });

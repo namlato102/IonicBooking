@@ -108,12 +108,23 @@ export class PlacesService {
   }
 
   getPlace(id : string){
-    return this.places.pipe(take(1), map(places =>{
-      return {...places.find(p => p.id === id)};
-      
-    }));
+    return this.http.get<PlaceData>(`https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places/${id}.json`)
+      .pipe(map((placeData) => {
+        return new Place(
+          id, 
+          placeData.title,
+          placeData.description,
+          placeData.imageUrl,
+          placeData.price,
+          new Date(placeData.availableFrom),
+          new Date(placeData.availableTo),
+          placeData.userId
+        );
+        //use map to construct the place object with the data we fetched and id added to it 
+      })
     // clone that entire _place object using spread operator then i pull out all the properties of Place model, which i retrieved here
     //and add them into a object.
+    );
   }
 
   //newly added 
