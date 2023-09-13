@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, LoadingController, ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, AlertController, LoadingController, ModalController, NavController } from '@ionic/angular';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
@@ -18,6 +18,7 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
   place !: Place;
   isBookable = true;
   private placeSub !: Subscription;
+  isLoading = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -27,7 +28,9 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private actionsheetCtrl : ActionSheetController,
     private bookingService : BookingService,
     private loadingCtrl : LoadingController,
-    private authService : AuthService
+    private authService : AuthService,
+    private alertCtrl : AlertController,
+    private router : Router,
   ) { }
   
   ngOnInit() {
@@ -39,11 +42,29 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         return;
       }
 
+      this.isLoading = true; //before fetching place
       const placeId = paramMap.get('placeId');
       if (placeId != null) {
         this.placeSub = this.placesService.getPlace(placeId).subscribe(place => {
           this.place = place;
           this.isBookable = place.userId !== this.authService.userId;// if it have the same userid  cannot book
+          this.isLoading = false;//done fetching it
+        },
+        err => { //using when type in http://localhost:8100/places/tabs/discover/"differentID"
+          this.alertCtrl.create({
+            header: 'An error occurred!',
+            message: 'Place could not be fetched. Please try again later.',
+            buttons: [
+              {
+                text: 'Okay',
+                handler: () => {
+                  this.router.navigate(['/places/tabs/discover']);
+                }
+              }
+            ]
+          }).then(alertEl => {
+              alertEl.present();
+           });
         });
       }
     });

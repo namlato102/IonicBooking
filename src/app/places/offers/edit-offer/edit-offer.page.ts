@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
+
 import { Subscription } from 'rxjs';
 import { Place } from 'src/app/models/place.model';
 import { PlacesService } from 'src/app/services/places.service';
@@ -23,7 +24,8 @@ export class EditOfferPage implements OnInit, OnDestroy {
     private placesService : PlacesService,
     private navCtrl : NavController,
     private router : Router,
-    private loadingCtrl : LoadingController
+    private loadingCtrl : LoadingController,
+    private alertCtrl : AlertController
   ) { }
 
   ngOnInit() {
@@ -62,19 +64,40 @@ export class EditOfferPage implements OnInit, OnDestroy {
       const placeid = paramMap.get('placeId');
       if (placeid !== null){
         //fetches details about a place based on its unique identifier, which is the "placeId."
-        this.placeSub = this.placesService.getPlace(placeid).subscribe(place => {
-          this.place = place;
-          this.form = new FormGroup({
-            title : new FormControl(this.place.title, {
-              updateOn: 'blur',
-              validators: [Validators.required]
-            }),
-            description : new FormControl(this.place.description, {
-              updateOn: 'blur',
-              validators: [Validators.required, Validators.maxLength(180)]
-            })
-          });
+        this.placeSub = this.placesService
+          .getPlace(placeid)
+          .subscribe(place => {
+            this.place = place;
+            this.form = new FormGroup({
+              title : new FormControl(this.place.title, {
+                updateOn: 'blur',
+                validators: [Validators.required]
+              }),
+              description : new FormControl(this.place.description, {
+                updateOn: 'blur',
+                validators: [Validators.required, Validators.maxLength(180)]
+              })
+            }
+          );
           this.isLoading = false;
+        }, 
+        err => {
+          this.alertCtrl
+              .create({
+                header: 'An error occurred!',
+                message: 'Place could not be fetched. Please try again later.',
+                buttons: [
+                  {
+                    text: 'Okay',
+                    handler: () => {
+                      this.router.navigate(['/places/tabs/offers']);
+                    }
+                  }
+                ]
+              })
+            .then(alertEl => {
+              alertEl.present();
+            });
         });
       }  
     });
@@ -87,6 +110,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
     }
     //this.navCtrl.navigateBack("/places/tabs/offers");
     console.log(this.form);
+    
     this.loadingCtrl.create({
       message: 'Updating place...'
     }).then(loadingEl => {
