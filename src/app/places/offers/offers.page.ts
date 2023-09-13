@@ -14,6 +14,7 @@ export class OffersPage implements OnInit, OnDestroy {
   
   offers !: Place[];
   private placeSub !: Subscription;
+  isLoading = false; //for spinner
 
   constructor(
     private placesService : PlacesService,
@@ -23,8 +24,18 @@ export class OffersPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     //this.offers = this.placesService.places;
+    //when i comment dummy place it will not use
     this.placeSub = this.placesService.places.subscribe(places => {
       this.offers = places; 
+    });
+  }
+
+  ionViewWillEnter(){
+    this.isLoading = true;
+    //subcriber to that obsevable
+    this.placesService.fetchPlace().subscribe(res => {
+      console.log(res);
+      this.isLoading = false;
     });
   }
 
