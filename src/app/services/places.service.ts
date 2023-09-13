@@ -152,25 +152,33 @@ export class PlacesService {
   }
 
   updatePlace(placeId: string, title: string, description: string){
+    let updatedPlaces: Place[];
+    return this.places.pipe(
+      take(1),
+      switchMap(places => {
+        const updatedPlaceIndex = places.findIndex(pl => pl.id === placeId);
+        const updatedPlaces = [...places];
+        const oldPlace = updatedPlaces[updatedPlaceIndex];
+        updatedPlaces[updatedPlaceIndex] = new Place(
+          oldPlace.id, 
+          title, 
+          description, 
+          oldPlace.imageUrl, 
+          oldPlace.price, 
+          oldPlace.availableFrom, 
+          oldPlace.availableTo
+        );
+        return this.http.put(`https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places/${placeId}.json`,
+          {...updatedPlaces[updatedPlaceIndex], id: null}
+        );
+      }), tap(() => {
+        this._places.next(updatedPlaces);
+        
+      })
+    )
     //return subcription so that we can listen to it in edit offer
     //take(1) get the latest snapshot of the list and not any future updates, if updated again , would be a separate operation
-    return this.places.pipe(
-      take(1), 
-      delay(1000), 
-      tap(places => {
-      const updatedPlaceIndex = places.findIndex(pl => pl.id === placeId);
-      const updatedPlaces = [...places];
-      const oldPlace = updatedPlaces[updatedPlaceIndex];
-      updatedPlaces[updatedPlaceIndex] = new Place(oldPlace.id, 
-        title, 
-        description, 
-        oldPlace.imageUrl, 
-        oldPlace.price, 
-        oldPlace.availableFrom, 
-        oldPlace.availableTo
-        );
-        this._places.next(updatedPlaces);
-    }))
+    
   }
 }
 
