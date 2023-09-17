@@ -76,17 +76,19 @@ export class BookingService {
   cancelBooking(bookingId: string) {
     return this.http
       .delete(
-        `https://ionic-booking-dcef5-default-rtdb.firebaseio.com/bookings.json`
-      )
+        `https://ionic-booking-dcef5-default-rtdb.firebaseio.com/bookings/${bookingId}.json`
+      ) // delete on server
       .pipe(
         switchMap(() => {
-          return this.bookings;
+          return this.bookings; //return behavior subject
         }),
-        take(1),
+        take(1),//only take 1 snapshot, without this it will creat
         tap(bookings => {
-          this._bookings.next(bookings.filter(b => b.id !== bookingId));
+          this._bookings.next(bookings.filter(b => b.id !== bookingId));//because of emit new event with next, -> trigger behavior subject, create infinity loop
         })
-      );
+      );//delete locallyS
+
+      //update not just on server but also locally
   }
 
   fetchBookings() {

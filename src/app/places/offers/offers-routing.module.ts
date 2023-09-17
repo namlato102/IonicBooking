@@ -16,10 +16,7 @@ const routes: Routes = [
     path: 'edit-offer/:placeId', //hardcode/dynamic segment : need Id and then pass through the url
     loadChildren: () => import('./edit-offer/edit-offer.module').then( m => m.EditOfferPageModule)
   },
-  {
-    path: ':placeId',
-    loadChildren: () => import('./offer-bookings/offer-bookings.module').then( m => m.OfferBookingsPageModule)
-  }
+  
 ];
 
 @NgModule({

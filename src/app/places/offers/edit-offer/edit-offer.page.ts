@@ -15,7 +15,7 @@ import { PlacesService } from 'src/app/services/places.service';
 export class EditOfferPage implements OnInit, OnDestroy {
   place !: Place; 
   form !: FormGroup;
-  placeSub !: Subscription;
+  private placeSub !: Subscription;
   isLoading = false;
   placeId : string | any;
 
@@ -54,18 +54,17 @@ export class EditOfferPage implements OnInit, OnDestroy {
       when we start loading the place for that id, we can already store the placeId  
       */
       this.placeId = paramMap.get('placeId');
-
       
       this.isLoading = true;
       //If the "placeId" parameter does exist in the route, 
       //it retrieves its value using paramMap.get('placeId') and assigns it to the placeId variable.
       //this.place = this.placesService.getPlace(paramMap.get('placeId'));
 
-      const placeid = paramMap.get('placeId');
-      if (placeid !== null){
+      const dummyplaceid = paramMap.get('placeId');
+      if (dummyplaceid !== null){
         //fetches details about a place based on its unique identifier, which is the "placeId."
         this.placeSub = this.placesService
-          .getPlace(placeid)
+          .getPlace(dummyplaceid)
           .subscribe(place => {
             this.place = place;
             this.form = new FormGroup({
@@ -104,33 +103,33 @@ export class EditOfferPage implements OnInit, OnDestroy {
   }
       
 
-  onUpdateOffer(){
-    if(!this.form.valid){
+  onUpdateOffer() {
+    if (!this.form.valid) {
       return;
     }
-    //this.navCtrl.navigateBack("/places/tabs/offers");
-    console.log(this.form);
-    
-    this.loadingCtrl.create({
-      message: 'Updating place...'
-    }).then(loadingEl => {
-      loadingEl.present();
-      this.placesService.updatePlace(
-        this.place.id,
-        this.form.value.title,
-        this.form.value.description
-      ).subscribe(() => {
-        loadingEl.dismiss();
-        this.form.reset();
-        this.router.navigate(['/places/tabs/offers'])
-      }) 
-    })
+    this.loadingCtrl
+      .create({
+        message: 'Updating place...'
+      })
+      .then(loadingEl => {
+        loadingEl.present();
+        this.placesService
+          .updatePlace(
+            this.place.id,
+            this.form.value.title,
+            this.form.value.description
+          )
+          .subscribe(() => {
+            loadingEl.dismiss();
+            this.form.reset();
+            this.router.navigate(['/places/tabs/offers']);
+          });
+      });
   }
 
   ngOnDestroy() {
-    if(this.placeSub){
-     this.placeSub.unsubscribe();
+    if (this.placeSub) {
+      this.placeSub.unsubscribe();
     }
- }
-
+  }
 }
