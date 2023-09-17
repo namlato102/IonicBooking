@@ -48,24 +48,26 @@ export class MapModalComponent  implements OnInit, AfterViewInit {
     this.modalCtrl.dismiss();
   }
 
-  private getGoogleMaps(): Promise<any> {
-    const win = window as any;
-    const googleModule = win.google;
-    if (googleModule && googleModule.maps) {
+  private getGoogleMaps(): Promise<any> { // alway return a promise include some data 
+    const win = window as any; // browser window
+    const googleModule = win.google; // will be set when we imported js sdk
+    if (googleModule && googleModule.maps) { // js sdk have been load
       return Promise.resolve(googleModule.maps);
-    }
+    } 
+    // else load sdk 
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src =
         'https://maps.googleapis.com/maps/api/js?key=AIzaSyB3P1U1KZYcRvql3VMXl2-g5GQlaK6AVlQ';
+      // control how the script source loaded
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
       script.onload = () => {
-        const loadedGoogleModule = win.google;
+        const loadedGoogleModule = win.google;// after sdk imported
         if (loadedGoogleModule && loadedGoogleModule.maps) {
           resolve(loadedGoogleModule.maps);
-        } else {
+        } else { // fail to load sdk
           reject('Google maps SDK not available.');
         }
       };
