@@ -14,7 +14,8 @@ import { NewOfferPage } from './new-offer.page';
     FormsModule,
     ReactiveFormsModule, //newly added
     IonicModule,
-    NewOfferPageRoutingModule
+    NewOfferPageRoutingModule,
+    
   ],
   declarations: [NewOfferPage]
 })
