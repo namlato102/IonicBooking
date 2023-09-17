@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { MapModalComponent } from '../../map-modal/map-modal.component';
 
 @Component({
-  selector: 'app-location-picker',
+  selector: 'app-location-picker', //using on new offer page component
   templateUrl: './location-picker.component.html',
   styleUrls: ['./location-picker.component.scss'],
 })
