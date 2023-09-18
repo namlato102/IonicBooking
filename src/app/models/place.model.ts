@@ -1,3 +1,5 @@
+import { PlaceLocation } from "./location.model";
+
 export class Place {
     
     constructor(
@@ -9,6 +11,7 @@ export class Place {
         //added availableFrom, To
         public availableFrom ?: Date | any,
         public availableTo ?: Date | any,
-        public userId ?: string
+        public userId ?: string,
+        public location ?: PlaceLocation
     ){}
 }

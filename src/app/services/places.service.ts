@@ -3,6 +3,7 @@ import { Place } from '../models/place.model';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, delay, map, switchMap, take, tap , of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { PlaceLocation } from '../models/location.model';
 
 interface PlaceData {
   availableFrom: string;
@@ -11,7 +12,8 @@ interface PlaceData {
   imageUrl : string;
   price: number;
   title: string;
-  userId: string
+  userId: string;
+  location: PlaceLocation;
 }
 
 @Injectable({
@@ -93,7 +95,8 @@ export class PlacesService {
                   resData[key].price,
                   new Date(resData[key].availableFrom),
                   new Date(resData[key].availableTo),
-                  resData[key].userId
+                  resData[key].userId,
+                  resData[key].location
                 )
               );
             }
@@ -118,7 +121,8 @@ export class PlacesService {
           placeData.price,
           new Date(placeData.availableFrom),
           new Date(placeData.availableTo),
-          placeData.userId
+          placeData.userId,
+          placeData.location
         );
         //use map to construct the place object with the data we fetched and id added to it 
       })
@@ -128,7 +132,7 @@ export class PlacesService {
   }
 
   //newly added 
-  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date){
+  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location : PlaceLocation){
     let generatedId : string;
     const newPlace = new Place(
       Math.random().toString(),
@@ -138,7 +142,8 @@ export class PlacesService {
       price,
       dateFrom,
       dateTo,
-      this.authService.userId
+      this.authService.userId,
+      location
     );
 
     return this.http
@@ -184,7 +189,8 @@ export class PlacesService {
           oldPlace.imageUrl, 
           oldPlace.price, 
           oldPlace.availableFrom, 
-          oldPlace.availableTo
+          oldPlace.availableTo,
+          oldPlace.location
         );
         return this.http.put(`https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places/${placeId}.json`,
           {...updatedPlaces[updatedPlaceIndex], id: null}

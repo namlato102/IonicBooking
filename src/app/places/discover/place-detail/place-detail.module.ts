@@ -8,13 +8,15 @@ import { PlaceDetailPageRoutingModule } from './place-detail-routing.module';
 
 import { PlaceDetailPage } from './place-detail.page';
 import { CreateBookingComponent } from 'src/app/bookings/create-booking/create-booking.component';
+import { SharedModule } from 'src/app/shared/shared.modul';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PlaceDetailPageRoutingModule
+    PlaceDetailPageRoutingModule,
+    SharedModule //able to use the picker and map modal in this component
   ],
   declarations: [PlaceDetailPage, CreateBookingComponent],
   //added createBookingcomponent
