@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  private _userIsAuthenticated = true;
+  private _userIsAuthenticated = true; //auto login
   private _userId = 'abc';
 
   get userIsAuthenticated(){
