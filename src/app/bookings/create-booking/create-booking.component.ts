@@ -11,7 +11,7 @@ import { Place } from 'src/app/models/place.model';
 export class CreateBookingComponent  implements OnInit {
   @Input() selectedPlace !: Place;
   @Input() selectedMode !: 'select' | 'random';
-  @ViewChild('f', { static: true }) form !: NgForm; //angular feature
+  //@ViewChild('f', { static: true }) form !: NgForm; //angular feature
   startDate !: string ;
   endDate !: string;
   
@@ -46,9 +46,10 @@ export class CreateBookingComponent  implements OnInit {
     this.modalCtrl.dismiss(null, 'cancel');
   }
 
-  onBookPlace(){
+  //read on Ionic & Angular Learning note or https://angular.io/api/forms/NgModel
+  onBookPlace(form : NgForm){
     //check valid
-    if (!this.form.valid || !this.datesValid) {
+    if (!form.valid || !this.datesValid(form)) {
       return;
     }
 
@@ -56,20 +57,20 @@ export class CreateBookingComponent  implements OnInit {
     this.modalCtrl.dismiss(
       {
         bookingData: {
-          firstName: this.form.value['first-name'],
-          lastName: this.form.value['last-name'],
-          guestNumber: +this.form.value['guest-number'],
-          startDate: new Date(this.form.value['date-from']),
-          endDate: new Date(this.form.value['date-to'])
+          firstName: form.value['first-name'],
+          lastName: form.value['last-name'],
+          guestNumber: +form.value['guest-number'],
+          startDate: new Date(form.value['date-from']),
+          endDate: new Date(form.value['date-to'])
         }
       },
       'confirm'
     );
   }
 
-  datesValid() {
-    const startDate = new Date(this.form.value['date-from']);//choose from html page
-    const endDate = new Date(this.form.value['date-to']);//choose from html page
+  datesValid(form : NgForm) {
+    const startDate = new Date(form.value['date-from']);//choose from html page
+    const endDate = new Date(form.value['date-to']);//choose from html page
     return endDate > startDate;
   }
 
