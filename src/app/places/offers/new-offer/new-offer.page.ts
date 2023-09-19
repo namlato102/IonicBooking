@@ -46,27 +46,34 @@ export class NewOfferPage implements OnInit {
 
   ngOnInit() {
     //using reactive form module
-    this.form = new FormGroup({
+    this.form = new FormGroup({//create new form in angular
+      //key(name of a control) - value(configuration of that control) pairs
+      //title control
       title: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
+      //description control
       description: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.maxLength(180)]
       }),
+      //price control
       price: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required, Validators.min(1)]
       }),
+      //dateFrom control
       dateFrom: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
+      //dateTo control
       dateTo: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
+      //picked location and picked image control 
       //location: new FormControl(null, { validators: [Validators.required] }),
       location: new FormControl(null),
       image: new FormControl(null)

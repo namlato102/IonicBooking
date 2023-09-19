@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms'; //added
+import { ReactiveFormsModule, FormsModule } from '@angular/forms'; //ReactiveFormsModule added
 
 import { IonicModule } from '@ionic/angular';
 
