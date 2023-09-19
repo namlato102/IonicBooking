@@ -13,7 +13,7 @@
   <form (ngSubmit)="onBookPlace()" #f="ngForm">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="10" offset-sm="1">
           <ion-item>
             <ion-label position="floating">First Name</ion-label>
             <ion-input
@@ -26,7 +26,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="10" offset-sm="1">
           <ion-item>
             <ion-label position="floating">Last Name</ion-label>
             <ion-input
@@ -39,19 +39,19 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="10" offset-sm="1">
           <ion-item>
             <ion-label position="floating">Number of Guests</ion-label>
-            <ion-select [ngModel]="'2'" name="guest-number">
+            <ion-select [ngModel]="'1'" name="guest-number">
               <ion-select-option value="1">1</ion-select-option>
               <ion-select-option value="2">2</ion-select-option>
-              <ion-select-option value="2">2</ion-select-option>
+              <ion-select-option value="3">3</ion-select-option>
             </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="4" offset-sm="2">
+        <ion-col size-sm="5" offset-sm="1">
           <ion-item>
             <ion-label position="floating">From</ion-label>
             <ion-datetime
@@ -66,7 +66,8 @@
             ></ion-datetime>
           </ion-item>
         </ion-col>
-        <ion-col size-sm="4" >
+      
+        <ion-col size-sm="5">
           <ion-item>
             <ion-label position="floating">To</ion-label>
             <ion-datetime
@@ -82,7 +83,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2">
+        <ion-col size-sm="10" offset-sm="1">
           <ion-button
             type="submit"
             color="primary"
