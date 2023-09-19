@@ -67,6 +67,11 @@ export class EditOfferPage implements OnInit, OnDestroy {
           .getPlace(dummyplaceid)
           .subscribe(place => {
             this.place = place;
+            /*
+            initialize form after get place list from service 
+            but important is inside of fuction we pass to activatedRouter.subcribe
+            or else u will work with a place that hasnt been set yet because the whole function run async
+            */ 
             this.form = new FormGroup({
               title : new FormControl(this.place.title, {
                 updateOn: 'blur',
@@ -104,6 +109,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
       
 
   onUpdateOffer() {
+    //check form if not valid do nothing
     if (!this.form.valid) {
       return;
     }
