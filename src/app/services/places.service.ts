@@ -141,42 +141,88 @@ export class PlacesService {
     );
   }
 
-  //newly added
-  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location : PlaceLocation, imageUrl : string){
-    let generatedId : string;
+  // //newly added
+  // addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location : PlaceLocation, imageUrl : string){
+  //   let generatedId : string;
+  //   const newPlace = new Place(
+  //     Math.random().toString(),
+  //     title,
+  //     description,
+  //     imageUrl,
+  //     price,
+  //     dateFrom,
+  //     dateTo,
+  //     this.authService.userId,
+  //     location
+  //   );
+
+  //   return this.http
+  //     .post<{name: string}>('https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places.json', {...newPlace, id: null})
+  //     .pipe(
+  //       switchMap(resData => {
+  //         generatedId = resData.name;//from the firebase
+  //       return this.places;
+  //     }),
+  //       take(1),//got the current latest list of places and dont listen to future places
+  //       tap(places => { //need the tap one
+  //         newPlace.id = generatedId;
+  //         //concat is default js array which take old array then add new place and return new array
+  //         //that new array is what will be emited to using next()
+  //         this._places.next(places.concat(newPlace));
+  //       })
+  //     );
+  //   //this._places.push(newPlace); //push it into the array
+  //   //event emitter if i delete this no place appeared on offer or discovery
+  //   // return this._places.pipe(take(1), delay(1000), tap(places => {
+  //   //   this._places.next(places.concat(newPlace));
+  //   //   })
+  //   // )
+  // }
+
+  addPlace(
+    title: string,
+    description: string,
+    price: number,
+    dateFrom: Date,
+    dateTo: Date
+  ) {
+    let generatedId: string;
     const newPlace = new Place(
       Math.random().toString(),
       title,
       description,
-      imageUrl,
+      'https://lonelyplanetimages.imgix.net/mastheads/GettyImages-538096543_medium.jpg?sharp=10&vib=20&w=1200',
       price,
       dateFrom,
       dateTo,
-      this.authService.userId,
-      location
+      this.authService.userId
     );
-
     return this.http
-      .post<{name: string}>('https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places.json', {...newPlace, id: null})
+      .post<{ name: string }>(
+        'https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places.json',
+        {
+          ...newPlace,
+          id: null
+        }
+      )
       .pipe(
         switchMap(resData => {
-          generatedId = resData.name;//from the firebase
-        return this.places;
-      }),
-        take(1),//got the current latest list of places and dont listen to future places
-        tap(places => { //need the tap one
+          generatedId = resData.name;
+          return this.places;
+        }),
+        take(1),
+        tap(places => {
           newPlace.id = generatedId;
-          //concat is default js array which take old array then add new place and return new array
-          //that new array is what will be emited to using next()
           this._places.next(places.concat(newPlace));
         })
       );
-    //this._places.push(newPlace); //push it into the array
-    //event emitter if i delete this no place appeared on offer or discovery
-    // return this._places.pipe(take(1), delay(1000), tap(places => {
-    //   this._places.next(places.concat(newPlace));
+    // return this.places.pipe(
+    //   take(1),
+    //   delay(1000),
+    //   tap(places => {
+    //     this._places.next(places.concat(newPlace));
     //   })
-    // )
+    // );
   }
 
   updatePlace(placeId: string, title: string, description: string){

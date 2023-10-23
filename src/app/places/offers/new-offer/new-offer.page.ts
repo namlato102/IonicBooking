@@ -73,85 +73,111 @@ export class NewOfferPage implements OnInit {
         updateOn: 'blur',
         validators: [Validators.required]
       }),
-      //picked location and picked image control 
+      //picked location and picked image control
       //location: new FormControl(null, { validators: [Validators.required] }),
-      location: new FormControl(null),
-      image: new FormControl(null)
+      // location: new FormControl(null),
+      // image: new FormControl(null)
     });
   }
 
 
-  onLocationPicked(location: PlaceLocation) {
-    this.form.patchValue({ location: location });
-  }
+  // onLocationPicked(location: PlaceLocation) {
+  //   this.form.patchValue({ location: location });
+  // }
 
-  onImagePicked(imageData: string | File) {
-    let imageFile;
-    if (typeof imageData === 'string') {
-      try {
-        imageFile = base64toBlob(
-          imageData.replace('data:image/jpeg;base64,', ''),
-          'image/jpeg'
-        );
-      } catch (error) {
-        console.log(error);
-        return;
-      }
-    } else {
-      imageFile = imageData;
-    }
-    this.form.patchValue({ image: imageFile });
-  }
+  // onImagePicked(imageData: string | File) {
+  //   let imageFile;
+  //   if (typeof imageData === 'string') {
+  //     try {
+  //       imageFile = base64toBlob(
+  //         imageData.replace('data:image/jpeg;base64,', ''),
+  //         'image/jpeg'
+  //       );
+  //     } catch (error) {
+  //       console.log(error);
+  //       return;
+  //     }
+  //   } else {
+  //     imageFile = imageData;
+  //   }
+  //   this.form.patchValue({ image: imageFile });
+  // }
 
-  onCreateOffer(){
-    if (!this.form.valid || !this.form.get('image')!.value) {
+  // onCreateOffer(){
+  //   if (!this.form.valid || !this.form.get('image')!.value) {
+  //     return;
+  //   }
+  //   //this.router.navigate(['/', 'places', 'tabs', 'offers']);
+  //   //add place to discover page
+  //   console.log(this.form.value);
+
+  //   this.loadingCtrl
+  //     .create({
+  //       message: 'Creating place...'
+  //     })
+  //     .then(loadingEl => {
+  //     loadingEl.present();//present loading element when we start sending the data
+  //     // this.placesService
+  //     //     .addPlace(
+  //     //       this.form.value.title,
+  //     //       this.form.value.description,
+  //     //       +this.form.value.price,
+  //     //       new Date(this.form.value.dateFrom),
+  //     //       new Date(this.form.value.dateTo),
+  //     //       this.form.value.location
+  //     //     )
+  //         this.placesService
+  //         .uploadImage(this.form.get('image')!.value)
+  //         .pipe(
+  //           switchMap(uploadRes => { //return a observable
+  //             return this.placesService.addPlace( //this is a observable
+  //               this.form.value.title,
+  //               this.form.value.description,
+  //               +this.form.value.price,
+  //               new Date(this.form.value.dateFrom),
+  //               new Date(this.form.value.dateTo),
+  //               this.form.value.location,
+  //               uploadRes.imageUrl
+  //             );
+  //           })
+  //         )
+  //         .subscribe(() => {
+  //           loadingEl.dismiss();//and we clear it here once we done with it
+  //           this.form.reset();//to reset input
+  //           this.router.navigate(['/places/tabs/offers']);
+  //         });
+  //     })
+  // }
+
+  onCreateOffer() {
+    if (!this.form.valid) {
       return;
     }
-    //this.router.navigate(['/', 'places', 'tabs', 'offers']);
-    //add place to discover page
-    console.log(this.form.value);
-
     this.loadingCtrl
       .create({
         message: 'Creating place...'
       })
       .then(loadingEl => {
-      loadingEl.present();//present loading element when we start sending the data
-      // this.placesService
-      //     .addPlace(
-      //       this.form.value.title,
-      //       this.form.value.description,
-      //       +this.form.value.price,
-      //       new Date(this.form.value.dateFrom),
-      //       new Date(this.form.value.dateTo),
-      //       this.form.value.location
-      //     )
-          this.placesService
-          .uploadImage(this.form.get('image')!.value)
-          .pipe(
-            switchMap(uploadRes => { //return a observable
-              return this.placesService.addPlace( //this is a observable
-                this.form.value.title,
-                this.form.value.description,
-                +this.form.value.price,
-                new Date(this.form.value.dateFrom),
-                new Date(this.form.value.dateTo),
-                this.form.value.location,
-                uploadRes.imageUrl
-              );
-            })
+        loadingEl.present();
+        this.placesService
+          .addPlace(
+            this.form.value.title,
+            this.form.value.description,
+            +this.form.value.price,
+            new Date(this.form.value.dateFrom),
+            new Date(this.form.value.dateTo)
           )
           .subscribe(() => {
-            loadingEl.dismiss();//and we clear it here once we done with it
-            this.form.reset();//to reset input 
+            loadingEl.dismiss();
+            this.form.reset();
             this.router.navigate(['/places/tabs/offers']);
           });
-      })
-  } 
+      });
+  }
 }
-  
 
-     
+
+
 
 
 
