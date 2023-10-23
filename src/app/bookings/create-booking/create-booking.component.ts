@@ -10,7 +10,7 @@ import { Place } from 'src/app/models/place.model';
 })
 export class CreateBookingComponent  implements OnInit {
   @Input() selectedPlace !: Place;
-  @Input() selectedMode !: 'select' | 'random';
+  @Input() selectedMode !: 'select' | 'random';//forwarding from the actionsheet into the modal 
   //@ViewChild('f', { static: true }) form !: NgForm; //angular feature
   startDate !: string ;
   endDate !: string;
@@ -23,14 +23,16 @@ export class CreateBookingComponent  implements OnInit {
   ngOnInit() {
     const availableFrom = new Date(this.selectedPlace.availableFrom);
     const availableTo = new Date(this.selectedPlace.availableTo);
+
+    //pick random range between start and end date only if selected mode is random 
     if (this.selectedMode === 'random') {
       this.startDate = new Date(
-        availableFrom.getTime() +
+        availableFrom.getTime() + //in milisecond
           Math.random() *
             (availableTo.getTime() -
-              7 * 24 * 60 * 60 * 1000 -
+              7 * 24 * 60 * 60 * 1000 - // 1 week deducted
               availableFrom.getTime())
-      ).toISOString();
+      ).toISOString();//required
 
       this.endDate = new Date(
         new Date(this.startDate).getTime() +
@@ -55,7 +57,7 @@ export class CreateBookingComponent  implements OnInit {
 
     //make page disappeared
     this.modalCtrl.dismiss(
-      {
+      {//this show on resultData in place-detail.page.ts
         bookingData: {
           firstName: form.value['first-name'],
           lastName: form.value['last-name'],

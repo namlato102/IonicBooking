@@ -56,20 +56,20 @@ export class PlacesService {
   //   ),
   // ]);
 
-  //getter: get name place without an underscore 
-  //return a copy of this._place so can be able to edit the array from other places where we get access to that array
+  //getter: get name place without an underscore
+  //return a copy of this._place so can be able to edit the array from other places where we get access to that array bang toan tu spread
   /*
   get places(){
     return [...this._places];
   }
   */
-  
-  //cause it is a subject 
+
+  //cause it is a subject
   get places(){
     return this._places.asObservable();//create a obsevable
   }
 
-  
+
 
   constructor(
     private authService : AuthService,
@@ -88,8 +88,8 @@ export class PlacesService {
             if(resData.hasOwnProperty(key)){
               places.push(
                 new Place(
-                  key, 
-                  resData[key].title, 
+                  key,
+                  resData[key].title,
                   resData[key].description,
                   resData[key].imageUrl,
                   resData[key].price,
@@ -114,7 +114,7 @@ export class PlacesService {
     return this.http.get<PlaceData>(`https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places/${id}.json`)
       .pipe(map((placeData) => {
         return new Place(
-          id, 
+          id,
           placeData.title,
           placeData.description,
           placeData.imageUrl,
@@ -124,7 +124,7 @@ export class PlacesService {
           placeData.userId,
           placeData.location
         );
-        //use map to construct the place object with the data we fetched and id added to it 
+        //use map to construct the place object with the data we fetched and id added to it
       })
     // clone that entire _place object using spread operator then i pull out all the properties of Place model, which i retrieved here
     //and add them into a object.
@@ -141,7 +141,7 @@ export class PlacesService {
     );
   }
 
-  //newly added 
+  //newly added
   addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date, location : PlaceLocation, imageUrl : string){
     let generatedId : string;
     const newPlace = new Place(
@@ -163,11 +163,13 @@ export class PlacesService {
           generatedId = resData.name;//from the firebase
         return this.places;
       }),
-        take(1),
+        take(1),//got the current latest list of places and dont listen to future places
         tap(places => { //need the tap one
-          newPlace.id = generatedId; 
+          newPlace.id = generatedId;
+          //concat is default js array which take old array then add new place and return new array
+          //that new array is what will be emited to using next()
           this._places.next(places.concat(newPlace));
-        })  
+        })
       );
     //this._places.push(newPlace); //push it into the array
     //event emitter if i delete this no place appeared on offer or discovery
@@ -193,29 +195,29 @@ export class PlacesService {
         const updatedPlaces = [...places];
         const oldPlace = updatedPlaces[updatedPlaceIndex];
         updatedPlaces[updatedPlaceIndex] = new Place(
-          oldPlace.id, 
-          title, 
-          description, 
-          oldPlace.imageUrl, 
-          oldPlace.price, 
-          oldPlace.availableFrom, 
+          oldPlace.id,
+          title,
+          description,
+          oldPlace.imageUrl,
+          oldPlace.price,
+          oldPlace.availableFrom,
           oldPlace.availableTo,
           oldPlace.location
         );
         return this.http.put(`https://ionic-booking-dcef5-default-rtdb.firebaseio.com/offered-places/${placeId}.json`,
           {...updatedPlaces[updatedPlaceIndex], id: null}
         );
-      }), 
+      }),
       tap(() => {
         this._places.next(updatedPlaces);
-        
+
       })
     )
     //return subcription so that we can listen to it in edit offer
     //take(1) get the latest snapshot of the list and not any future updates, if updated again , would be a separate operation
-    
+
   }
 }
 
-      
+
 

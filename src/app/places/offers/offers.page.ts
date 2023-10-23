@@ -47,7 +47,7 @@ export class OffersPage implements OnInit, OnDestroy {
   
   ngOnDestroy() {
     if(this.placeSub){
-      this.placeSub.unsubscribe();
+      this.placeSub.unsubscribe();//delete after page get destroy to avoid memory leak
     }      
   }
 

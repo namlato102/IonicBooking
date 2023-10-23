@@ -118,6 +118,7 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
             .create({message: 'Booking Place...'})
             .then(loadingEl => {
               loadingEl.present(); //like the new offer
+              console.log(resultData.data, resultData.role)
               const data = resultData.data.bookingData;
               console.log('BOOKED!');//appeared when create-booking finished
               this.bookingService.addBooking(
